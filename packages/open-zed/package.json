@@ -1,0 +1,30 @@
+{
+  "name": "@amitkot/pi-open-zed",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Host-side Zed IDE bridge for Pi — opens files at a line number from the coding agent.",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "zed",
+    "ide"
+  ],
+  "scripts": {
+    "check": "node ../../scripts/check.mjs",
+    "test": "node ../../tests/open-zed.test.mjs"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "typebox": "*"
+  },
+  "peerDependenciesMeta": {
+    "typebox": {
+      "optional": true
+    }
+  },
+  "license": "MIT"
+}
