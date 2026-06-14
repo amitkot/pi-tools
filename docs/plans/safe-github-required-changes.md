@@ -79,7 +79,8 @@ pi.registerTool({
 Add `promptSnippet` and `promptGuidelines`, including:
 
 - Use `github_pr_create` instead of `gh pr create`.
-- For mutations, call once with `confirm: false`, show the preview, and only call with `confirm: true` after explicit user approval.
+- If the user explicitly asks to create a PR, call `github_pr_create` with `confirm: true`; the Pi permission prompt is the approval gate.
+- Use `confirm: false` when the user asks for a preview or the request is ambiguous.
 - Do not use raw `gh api`, `gh auth token`, or shell for GitHub operations when these tools are available.
 
 ### 3. Make confirmation fail closed
@@ -245,7 +246,7 @@ If exact tool-name matching does not work, rely on the internal `confirm !== tru
    - Expected preview only.
    - No push.
    - No PR created.
-9. After explicit user approval, call `github_pr_create` with `confirm: true` in a test repo/branch.
+9. After an explicit create request, call `github_pr_create` with `confirm: true` in a test repo/branch and approve the Pi permission prompt.
    - Expected push if needed.
    - Expected PR URL.
    - No TLS failure.
@@ -265,7 +266,7 @@ If exact tool-name matching does not work, rely on the internal `confirm !== tru
 - `github_auth_status` succeeds from the extension process.
 - `github_repo_info` returns correct repo identity.
 - `github_pr_list` and `github_pr_view` work without approval.
-- `github_pr_create` previews by default and mutates only with `confirm: true`.
+- `github_pr_create` previews by default and mutates only with `confirm: true` after the Pi permission prompt is approved.
 - No arbitrary `gh` command or raw `gh api` tool is exposed.
 - No tokens are printed.
 - All process execution uses argv arrays, never shell strings.

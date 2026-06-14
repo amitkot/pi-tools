@@ -31,7 +31,7 @@ Path: `packages/safe-github/`
 
 Typed GitHub operations via the host `gh` CLI.
 
-Tools: `github_auth_status`, `github_repo_info`, `github_pr_list`, `github_pr_view`, `github_pr_create` (preview-first).
+Tools: `github_auth_status`, `github_repo_info`, `github_pr_list`, `github_pr_view`, `github_pr_create`.
 
 See [`packages/safe-github/README.md`](packages/safe-github/README.md) for details.
 
@@ -108,7 +108,7 @@ Pi extensions run with host permissions. Every package in this repo prefers narr
 
 - no arbitrary shell command tools
 - subprocesses use `execFile` with argv arrays, not shell strings
-- mutating operations require explicit confirmation
+- mutating operations are gated by `confirm: true` and Pi's permission prompt
 - command output is bounded and sanitized
 - no token-exposing tools
 
