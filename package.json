@@ -3,18 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A monorepo for Pi extensions and related tools.",
+  "description": "A monorepo for Pi extensions.",
   "keywords": [
     "pi-package",
     "pi",
     "pi-extension"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitkot/pi-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amitkot/pi-tools/issues"
+  },
+  "homepage": "https://github.com/amitkot/pi-tools#readme",
+  "engines": {
+    "node": ">=22"
+  },
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "check": "node scripts/check.mjs",
-    "test": "node tests/safe-github.test.mjs"
+    "test": "node tests/safe-github.test.mjs && node tests/open-zed.test.mjs"
   },
   "pi": {
     "extensions": [

@@ -9,6 +9,25 @@
     "zed",
     "ide"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitkot/pi-tools.git",
+    "directory": "packages/open-zed"
+  },
+  "bugs": {
+    "url": "https://github.com/amitkot/pi-tools/issues"
+  },
+  "homepage": "https://github.com/amitkot/pi-tools/tree/main/packages/open-zed#readme",
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "check": "node ../../scripts/check.mjs",
     "test": "node ../../tests/open-zed.test.mjs"

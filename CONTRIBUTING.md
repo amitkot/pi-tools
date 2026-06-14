@@ -22,15 +22,16 @@ npm test
 ```text
 packages/
   safe-github/
-    src/index.ts
-    README.md
-    package.json
+  open-zed/
+tests/
+  safe-github.test.mjs
+  open-zed.test.mjs
 .pi/extensions/
-  safe-github/
-    index.ts   # local development shim
+  safe-github/       # local development shim
+  open-zed/           # local development shim
 ```
 
-Add new Pi plugins under `packages/<plugin-name>/` with their own `package.json`, `README.md`, and `src/index.ts`.
+Add new Pi plugins under `packages/<plugin-name>/` with their own `package.json`, `README.md`, `src/index.ts`, and test coverage in `tests/`.
 
 ## Pull requests
 
@@ -39,6 +40,7 @@ Keep pull requests narrow:
 - one extension or concern per PR
 - explain the problem being solved
 - include verification steps
+- update package-level docs when behavior or requirements change
 - avoid unrelated formatting changes
 
 ## Security-sensitive changes
