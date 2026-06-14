@@ -1,0 +1,30 @@
+{
+  "name": "@amitkot/pi-safe-github",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A narrow host-side GitHub bridge extension for Pi.",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "github",
+    "gh"
+  ],
+  "scripts": {
+    "check": "node ../../scripts/check.mjs",
+    "test": "node ../../tests/safe-github.test.mjs"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "typebox": "*"
+  },
+  "peerDependenciesMeta": {
+    "typebox": {
+      "optional": true
+    }
+  },
+  "license": "MIT"
+}

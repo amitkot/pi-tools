@@ -1,5 +1,6 @@
 {
-  "name": "safe-github",
+  "name": "safe-github-local-shim",
+  "private": true,
   "version": "0.1.0",
   "type": "module",
   "pi": {

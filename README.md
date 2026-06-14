@@ -1,16 +1,34 @@
 # Pi Tools
 
-Project-local Pi extensions and related tooling.
+A monorepo for Pi extensions and related tools.
 
-## Extensions
+The first package is `safe-github`, a narrow host-side GitHub bridge for Pi.
 
-### safe-github
+## Problem this solves
 
-Path: `.pi/extensions/safe-github/`
+On macOS, Pi's normal `bash` tool can run inside a sandbox. That is good for day-to-day development commands, but it can break stock `gh` in some environments with TLS certificate verification errors such as:
 
-`safe-github` provides a narrow, typed GitHub bridge for Pi. It lets Pi perform common GitHub operations through the host `gh` CLI while normal development commands continue to use the sandboxed bash tool.
+```text
+tls: failed to verify certificate: x509: OSStatus -26276
+```
 
-The extension intentionally does **not** expose arbitrary `gh` execution, raw `gh api`, or `gh auth token`.
+The blunt fixes are unattractive:
+
+- do not rebuild `gh`
+- do not disable the sandbox for all commands
+- do not loosen the sandbox around macOS trust services
+- do not give the model arbitrary host shell access
+- do not expose raw `gh api` or `gh auth token`
+
+`safe-github` solves this by registering a small set of typed Pi tools that run from the Pi extension process on the host Mac. Normal commands still use Pi's usual sandboxed tools. GitHub operations use a narrow, audited surface.
+
+## Packages
+
+### `safe-github`
+
+Path: `packages/safe-github/`
+
+Project-local development shim: `.pi/extensions/safe-github/index.ts`
 
 Available v1 tools:
 
@@ -22,4 +40,101 @@ Available v1 tools:
 
 Mutating operations are preview-first: `github_pr_create` does not push or create a PR unless called with `confirm: true`.
 
-See `.pi/extensions/safe-github/README.md` for the threat model, approval model, and testing steps.
+See [`packages/safe-github/README.md`](packages/safe-github/README.md) for details.
+
+## Installation
+
+### Use this repo as a Pi package
+
+```bash
+pi install git:github.com/amitkot/pi-tools
+```
+
+Then restart Pi or run:
+
+```text
+/reload
+```
+
+### Try locally from a checkout
+
+```bash
+git clone https://github.com/amitkot/pi-tools.git
+cd pi-tools
+pi -e ./packages/safe-github/src/index.ts
+```
+
+### Develop inside this repo
+
+This repo also contains a project-local Pi extension shim at `.pi/extensions/safe-github/index.ts`, so Pi can auto-load it from a trusted checkout.
+
+After changes:
+
+```text
+/reload
+```
+
+## Requirements
+
+- Pi with extension support
+- Node.js 22+ for local tests
+- GitHub CLI (`gh`) installed on the host
+- Host `gh` authenticated:
+
+```bash
+gh auth status
+gh api /user --jq .login
+```
+
+Do not use `gh auth token` for verification.
+
+## Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run checks:
+
+```bash
+npm run check
+npm test
+```
+
+## Repository layout
+
+```text
+packages/
+  safe-github/
+    src/index.ts
+    README.md
+    package.json
+.pi/extensions/
+  safe-github/
+    index.ts       # local development shim
+docs/
+  plans/           # planning notes and public-readiness checklist
+```
+
+Future Pi plugins should live under `packages/<plugin-name>/` with their own README, package manifest, and `src/index.ts`.
+
+## Security model
+
+Pi extensions run with host permissions. This repo prefers narrow typed tools over generic command execution.
+
+For `safe-github`:
+
+- no arbitrary `gh` command tool
+- no raw `gh api` tool
+- no `gh auth token` tool
+- subprocesses use `execFile` with argv arrays, not shell strings
+- mutating operations require explicit confirmation
+- command output and errors are bounded and sanitized
+
+See [`SECURITY.md`](SECURITY.md) for reporting and policy details.
+
+## License
+
+MIT. See [`LICENSE`](LICENSE).
