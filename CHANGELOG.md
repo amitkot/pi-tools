@@ -6,8 +6,8 @@ All notable changes to this repository will be documented here.
 
 ### Added
 
-- Initial `safe-github` Pi extension.
-- Host-side typed GitHub bridge for common `gh` operations.
+- Initial `safe-github` Pi extension — host-side typed GitHub bridge for common `gh` operations.
+- `open-zed` Pi extension — opens files in the Zed IDE from Pi, bypassing macOS sandbox restrictions.
 - Preview-first `github_pr_create` workflow.
 - Monorepo package layout for future Pi plugins.
 - Basic tests and load checks.

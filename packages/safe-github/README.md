@@ -20,10 +20,19 @@ Provides safe, host-side GitHub operations via the `gh` CLI, bypassing macOS san
 
 ## Installation
 
-From the monorepo:
+Install the `@amitkot/pi-safe-github` extension from the pi-tools monorepo:
 
 ```bash
 pi install git:github.com/amitkot/pi-tools
+```
+
+To load just this extension, filter in `~/.pi/agent/settings.json`:
+
+```json
+{
+  "source": "git:github.com/amitkot/pi-tools",
+  "extensions": ["packages/safe-github/src/index.ts"]
+}
 ```
 
 For local development from a checkout:

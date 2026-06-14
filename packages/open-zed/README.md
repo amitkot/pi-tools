@@ -38,10 +38,19 @@ inspection or editing in their IDE.
 
 ## Installation
 
-From the monorepo:
+Install the `@amitkot/pi-open-zed` extension from the pi-tools monorepo:
 
 ```bash
 pi install git:github.com/amitkot/pi-tools
+```
+
+To load just this extension, filter in `~/.pi/agent/settings.json`:
+
+```json
+{
+  "source": "git:github.com/amitkot/pi-tools",
+  "extensions": ["packages/open-zed/src/index.ts"]
+}
 ```
 
 For local development from a checkout:
