@@ -1,0 +1,52 @@
+name: Bug report
+description: Report a focused, reproducible problem
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. For suspected security issues, please do not open a public issue; follow SECURITY.md.
+  - type: input
+    id: package
+    attributes:
+      label: Package
+      description: Which package is affected?
+      placeholder: safe-github, open-zed, or root repo
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened? What did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Keep this minimal and avoid including tokens, credentials, or private repository details.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Node version, Pi version, and relevant host tool version (`gh`, `zed`) when applicable.
+      placeholder: |
+        OS:
+        Node:
+        Pi:
+        gh:
+        zed:
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or output
+      description: Paste only sanitized output. Do not include tokens or private paths unless necessary.
+      render: text

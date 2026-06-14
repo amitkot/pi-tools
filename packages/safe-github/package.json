@@ -9,6 +9,25 @@
     "github",
     "gh"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitkot/pi-tools.git",
+    "directory": "packages/safe-github"
+  },
+  "bugs": {
+    "url": "https://github.com/amitkot/pi-tools/issues"
+  },
+  "homepage": "https://github.com/amitkot/pi-tools/tree/main/packages/safe-github#readme",
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "check": "node ../../scripts/check.mjs",
     "test": "node ../../tests/safe-github.test.mjs"
