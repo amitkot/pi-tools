@@ -1,0 +1,37 @@
+{
+  "name": "pi-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A monorepo for Pi extensions and related tools.",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension"
+  ],
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "test": "node tests/safe-github.test.mjs"
+  },
+  "pi": {
+    "extensions": [
+      "packages/*/src/index.ts"
+    ]
+  },
+  "peerDependencies": {
+    "typebox": "*"
+  },
+  "peerDependenciesMeta": {
+    "typebox": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "jiti": "^2.6.1",
+    "typebox": "^1.2.9"
+  },
+  "license": "MIT"
+}
