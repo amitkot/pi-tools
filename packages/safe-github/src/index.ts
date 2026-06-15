@@ -443,7 +443,7 @@ const PR_CREATE_SCHEMA = Type.Object({
   body: Type.String({ description: "PR body (markdown)" }),
   base: Type.Optional(Type.String({ description: "Target branch (default: repo default branch)" })),
   draft: Type.Optional(Type.Boolean({ default: false, description: "Create as draft PR" })),
-  confirm: Type.Optional(Type.Boolean({ default: false, description: "Set to true to actually create the PR" })),
+  confirm: Type.Optional(Type.Boolean({ default: false, description: "Set to true to create the PR; omit or false to preview only" })),
   cwd: Type.Optional(Type.String({ description: "Working directory (defaults to Pi session cwd)" })),
 });
 
@@ -510,7 +510,7 @@ async function handlePrCreate(
       JSON.stringify(plannedArgv, null, 2),
       "```",
       "",
-      "Call again with `confirm: true` only after explicit user approval.",
+      "Call again with `confirm: true` to create the PR. The Pi permission prompt is the approval gate.",
     ].join("\n");
 
     return {
@@ -596,11 +596,12 @@ export default function safeGithub(pi: ExtensionAPI) {
   pi.registerTool({
     name: "github_pr_create",
     label: "GitHub PR Create",
-    description: "Create a pull request for the current branch. Requires confirm: true to actually execute; previews otherwise.",
-    promptSnippet: "Create a GitHub pull request (preview-first, requires confirmation)",
+    description: "Create a pull request for the current branch when confirm is true; preview otherwise.",
+    promptSnippet: "Create or preview a GitHub pull request",
     promptGuidelines: [
       "Use github_pr_create instead of `gh pr create` to create PRs.",
-      "For github_pr_create, always call first with `confirm: false`, show the preview to the user, and only call with `confirm: true` after explicit user approval.",
+      "If the user explicitly asks to create a PR, call github_pr_create with `confirm: true`; the Pi permission prompt is the approval gate.",
+      "Use `confirm: false` when the user asks for a preview or the request is ambiguous.",
       "Never use raw `gh api`, `gh auth token`, or shell for GitHub operations when the safe-github tools are available.",
     ],
     parameters: PR_CREATE_SCHEMA,

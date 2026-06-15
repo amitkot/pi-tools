@@ -63,13 +63,14 @@ After installation or changes, restart Pi or run:
 
 ## Approval Model
 For `github_pr_create`:
-1. Agent calls the tool with default parameters (confirm defaults to `false`).
-2. The tool returns a preview showing the repo, branch, base, title, body length, draft flag, and planned argv arrays with the body redacted.
-3. After user explicitly approves, the agent calls again with `confirm: true` to execute.
+
+- `confirm: false` or omitted returns a preview showing the repo, branch, base, title, body length, draft flag, and planned argv arrays with the body redacted.
+- `confirm: true` creates the PR. The Pi permission prompt is the approval gate.
 
 ## Prompt Guidelines
 - Use `github_pr_create` instead of `gh pr create`.
-- For mutations, always call first with `confirm: false`, show the preview to the user, and only call with `confirm: true` after explicit approval.
+- If the user explicitly asks to create a PR, call `github_pr_create` with `confirm: true`; the Pi permission prompt is the approval gate.
+- Use `confirm: false` when the user asks for a preview or the request is ambiguous.
 - Never use raw `gh api`, `gh auth token`, or shell for GitHub operations when these tools are available.
 
 ## Deferred (not in v1)
@@ -99,7 +100,7 @@ Call `github_pr_list` and `github_pr_view`. Expected: work without approval, com
 On a clean feature branch, call `github_pr_create` without `confirm`. Expected: preview only, no push, no PR created. The preview should show argv arrays and body length, not the full PR body.
 
 ### Test 6: PR creation execution
-After user approval, call with `confirm: true` in a test repo/branch. Expected: push if needed, PR created, URL returned, no TLS failure.
+After an explicit create request, call with `confirm: true` in a test repo/branch. Expected: Pi permission prompt appears; after approval, push if needed, PR created, URL returned, no TLS failure.
 
 ### Test 7: failure cases
 - default branch → refuses

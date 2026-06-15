@@ -197,7 +197,7 @@ This should make required failure cases understandable:
 - missing gh auth
 - wrong cwd
 
-### 7. Keep preview-first mutation gate
+### 7. Keep permission-gated mutation behavior
 
 Ensure `github_pr_create` still uses:
 
@@ -209,7 +209,7 @@ if (params.confirm !== true) {
 
 Do not rely on schema defaults.
 
-Acceptance check: calling `github_pr_create` without `confirm` must never push or create a PR.
+Acceptance check: calling `github_pr_create` without `confirm` must never push or create a PR. Calling it with `confirm: true` should rely on Pi's permission prompt as the approval gate.
 
 ### 8. Tighten raw bash `gh` permissions
 
@@ -280,7 +280,7 @@ After `/reload`:
    - Expected: preview only, no push, no PR.
    - Preview argv must match actual execution argv.
    - Preview must not include full body.
-7. Call `github_pr_create` with `confirm: true` only after explicit user approval in a test branch/repo.
+7. Call `github_pr_create` with `confirm: true` after an explicit create request in a test branch/repo and approve the Pi permission prompt.
    - Expected: push if needed, PR URL returned.
 
 ### Safe failure checks
