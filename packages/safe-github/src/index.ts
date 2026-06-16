@@ -447,6 +447,14 @@ const PR_CREATE_SCHEMA = Type.Object({
   cwd: Type.Optional(Type.String({ description: "Working directory (defaults to Pi session cwd)" })),
 });
 
+const PR_EDIT_SCHEMA = Type.Object({
+  number: Type.Optional(Type.Number({ description: "PR number" })),
+  url: Type.Optional(Type.String({ description: "PR URL" })),
+  title: Type.Optional(Type.String({ description: "New PR title" })),
+  body: Type.Optional(Type.String({ description: "New PR body (markdown)" })),
+  cwd: Type.Optional(Type.String({ description: "Working directory (defaults to Pi session cwd)" })),
+});
+
 async function handlePrCreate(
   _toolCallId: string,
   params: {
@@ -540,6 +548,107 @@ async function handlePrCreate(
   return { content: [{ type: "text", text: `PR created: ${prUrl}` }], details: { pr_url: prUrl } };
 }
 
+export function buildPrEditArgv(params: {
+  number?: number;
+  url?: string;
+  title?: string;
+  body?: string;
+}): string[] {
+  const args: string[] = ["pr", "edit"];
+
+  if (params.number !== undefined) {
+    args.push(params.number.toString());
+  } else if (params.url !== undefined) {
+    args.push(params.url);
+  }
+
+  if (params.title !== undefined) {
+    args.push("--title", params.title);
+  }
+  if (params.body !== undefined) {
+    args.push("--body", params.body);
+  }
+
+  return args;
+}
+
+async function handlePrEdit(
+  _toolCallId: string,
+  params: {
+    number?: number;
+    url?: string;
+    title?: string;
+    body?: string;
+    cwd?: string;
+  },
+  defaultCwd: string,
+): Promise<{ content: { type: "text"; text: string }[]; details: unknown }> {
+  const cwd = params.cwd ?? defaultCwd;
+
+  // Require either number or url, but not both.
+  if (params.number !== undefined && params.url !== undefined) {
+    throw new Error("Provide either number or url, not both.");
+  }
+  if (params.number !== undefined) {
+    requirePositiveInteger(params.number, "number");
+  }
+  if (params.url !== undefined && !isGitHubPrUrl(params.url)) {
+    throw new Error("url must be a GitHub pull request URL.");
+  }
+
+  // Require at least one field to update.
+  const titleTrimmed = params.title?.trim();
+  const bodyTrimmed = params.body?.trim();
+
+  if (titleTrimmed === "") {
+    throw new Error("title must not be empty.");
+  }
+  if (bodyTrimmed === "") {
+    throw new Error("body must not be empty.");
+  }
+  if (titleTrimmed === undefined && bodyTrimmed === undefined) {
+    throw new Error("Provide at least one field to update: title or body.");
+  }
+
+  const args = buildPrEditArgv({
+    number: params.number,
+    url: params.url,
+    title: titleTrimmed,
+    body: bodyTrimmed,
+  });
+
+  const { stdout } = await gh(args, cwd);
+  const prUrl = stdout.match(/https?:\/\/[^\s]+/)?.[0] ?? "unknown URL";
+
+  // Extract PR number from the URL for the output.
+  const prNumber = params.number ?? "?";
+
+  const changed: string[] = [];
+  if (titleTrimmed !== undefined) changed.push("title");
+  if (bodyTrimmed !== undefined) changed.push("body");
+
+  const md = [
+    `PR #${prNumber} updated.`,
+    `**URL:** ${prUrl}`,
+    `**Changed:** ${changed.join(", ")}`,
+    titleTrimmed !== undefined ? `**New title:** ${titleTrimmed}` : "",
+    bodyTrimmed !== undefined ? `**New body length:** ${bodyTrimmed.length} chars` : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return {
+    content: [{ type: "text", text: md }],
+    details: {
+      pr_number: params.number,
+      pr_url: prUrl,
+      changed,
+      title: titleTrimmed,
+      bodyLength: bodyTrimmed?.length,
+    },
+  };
+}
+
 // =============================================================================
 // Extension entry point
 // =============================================================================
@@ -607,6 +716,22 @@ export default function safeGithub(pi: ExtensionAPI) {
     parameters: PR_CREATE_SCHEMA,
     async execute(toolCallId, params, _signal, _onUpdate, ctx) {
       return handlePrCreate(toolCallId, params as Parameters<typeof handlePrCreate>[1], ctx.cwd);
+    },
+  });
+
+  pi.registerTool({
+    name: "github_pr_edit",
+    label: "GitHub PR Edit",
+    description: "Edit an existing PR's title and/or body.",
+    promptSnippet: "Edit a GitHub pull request title or body",
+    promptGuidelines: [
+      "Use github_pr_edit instead of `gh pr edit` to edit PR metadata.",
+      "Select the PR by number, URL, or current branch.",
+      "Never use raw `gh api`, `gh auth token`, or shell for GitHub operations when the safe-github tools are available.",
+    ],
+    parameters: PR_EDIT_SCHEMA,
+    async execute(toolCallId, params, _signal, _onUpdate, ctx) {
+      return handlePrEdit(toolCallId, params as Parameters<typeof handlePrEdit>[1], ctx.cwd);
     },
   });
 }

@@ -10,6 +10,7 @@ const {
   isGitHubPrUrl,
   normalizePrListLimit,
   requirePositiveInteger,
+  buildPrEditArgv,
 } = mod;
 
 function test(name, fn) {
@@ -85,10 +86,49 @@ test("extension registers exactly the v1 tool surface", () => {
       "github_pr_list",
       "github_pr_view",
       "github_pr_create",
+      "github_pr_edit",
     ],
   );
   for (const tool of tools) {
     assert.equal(typeof tool.execute, "function");
     assert.ok(tool.parameters);
   }
+});
+
+// ---------------------------------------------------------------------------
+// github_pr_edit tests
+// ---------------------------------------------------------------------------
+
+test("github_pr_edit tool is registered", () => {
+  const tools = [];
+  safeGithub({
+    registerTool(definition) {
+      tools.push(definition);
+    },
+  });
+
+  const editTool = tools.find((t) => t.name === "github_pr_edit");
+  assert.ok(editTool, "github_pr_edit should be registered");
+  assert.equal(typeof editTool.execute, "function");
+  assert.ok(editTool.parameters);
+});
+
+test("buildPrEditArgv — title-only edit by number", () => {
+  const argv = buildPrEditArgv({ number: 42, title: "New title" });
+  assert.deepEqual(argv, ["pr", "edit", "42", "--title", "New title"]);
+});
+
+test("buildPrEditArgv — body-only edit by url", () => {
+  const argv = buildPrEditArgv({ url: "https://github.com/owner/repo/pull/99", body: "New body" });
+  assert.deepEqual(argv, ["pr", "edit", "https://github.com/owner/repo/pull/99", "--body", "New body"]);
+});
+
+test("buildPrEditArgv — title and body edit by current branch (no selector)", () => {
+  const argv = buildPrEditArgv({ title: "T", body: "B" });
+  assert.deepEqual(argv, ["pr", "edit", "--title", "T", "--body", "B"]);
+});
+
+test("buildPrEditArgv — body-only by current branch (no selector)", () => {
+  const argv = buildPrEditArgv({ body: "New body only" });
+  assert.deepEqual(argv, ["pr", "edit", "--body", "New body only"]);
 });

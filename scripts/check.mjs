@@ -12,6 +12,7 @@ const packages = [
       "github_pr_list",
       "github_pr_view",
       "github_pr_create",
+      "github_pr_edit",
     ],
   },
   {
