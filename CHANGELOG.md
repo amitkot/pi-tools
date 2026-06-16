@@ -2,6 +2,12 @@
 
 All notable changes to this repository will be documented here.
 
+## Unreleased
+
+### Added
+
+- `github_pr_edit` tool — update an existing PR's title and/or body by number, URL, or current branch.
+
 ## 0.1.0 - 2026-06-14
 
 ### Added

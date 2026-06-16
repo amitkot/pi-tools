@@ -31,7 +31,7 @@ Path: `packages/safe-github/`
 
 Typed GitHub operations via the host `gh` CLI.
 
-Tools: `github_auth_status`, `github_repo_info`, `github_pr_list`, `github_pr_view`, `github_pr_create`.
+Tools: `github_auth_status`, `github_repo_info`, `github_pr_list`, `github_pr_view`, `github_pr_create`, `github_pr_edit`.
 
 See [`packages/safe-github/README.md`](packages/safe-github/README.md) for details.
 

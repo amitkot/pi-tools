@@ -23,7 +23,7 @@ Repository-wide expectations:
 
 Package-specific notes:
 
-- `safe-github` does not expose `gh auth token`, raw `gh api`, or arbitrary `gh` command execution. Mutating operations require `confirm: true` and are gated by Pi's permission prompt.
+- `safe-github` does not expose `gh auth token`, raw `gh api`, or arbitrary `gh` command execution. Mutating operations (`github_pr_create`, `github_pr_edit`) are gated by Pi's permission prompt.
 - `open-zed` only opens files in Zed. It does not edit files or expose arbitrary `zed` commands.
 
 Users should review extension code before installing any Pi package from this repository.

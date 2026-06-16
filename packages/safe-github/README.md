@@ -60,9 +60,10 @@ After installation or changes, restart Pi or run:
 
 ### Mutating (requires `confirm: true`)
 - `github_pr_create` — create a PR for the current branch
+- `github_pr_edit` — edit an existing PR's title and/or body
 
 ## Approval Model
-For `github_pr_create`:
+For `github_pr_create` and `github_pr_edit`:
 
 - `confirm: false` or omitted returns a preview showing the repo, branch, base, title, body length, draft flag, and planned argv arrays with the body redacted.
 - `confirm: true` creates the PR. The Pi permission prompt is the approval gate.
@@ -72,6 +73,11 @@ For `github_pr_create`:
 - If the user explicitly asks to create a PR, call `github_pr_create` with `confirm: true`; the Pi permission prompt is the approval gate.
 - Use `confirm: false` when the user asks for a preview or the request is ambiguous.
 - Never use raw `gh api`, `gh auth token`, or shell for GitHub operations when these tools are available.
+
+For `github_pr_edit`:
+
+- The Pi permission prompt is the approval gate.
+- No separate preview/confirm parameter is required — the tool runs when called.
 
 ## Deferred (not in v1)
 - `github_pr_checks` — deferred until core tools pass real tests
