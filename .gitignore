@@ -1,3 +1,7 @@
 .env
 node_modules/
 .DS_Store
+
+# Pi local state (not the extension shims)
+.pi/npm/
+.pi/settings.json
