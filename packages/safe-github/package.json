@@ -1,8 +1,8 @@
 {
   "name": "@amitkot/pi-safe-github",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
-  "description": "A narrow host-side GitHub bridge extension for Pi.",
+  "description": "Typed GitHub wrapper tools for Pi: PRs, CI runs, issues, releases, and workflows.",
   "keywords": [
     "pi-package",
     "pi-extension",
