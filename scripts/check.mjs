@@ -50,10 +50,23 @@ const packages = [
     entry: "../packages/open-zed/src/index.ts",
     expectedTools: ["open_zed"],
   },
+  {
+    name: "deliver-code-changes",
+    entry: "../packages/deliver-code-changes/src/index.ts",
+    expectedTools: [],
+    expectedCommands: ["deliver"],
+  },
+  {
+    name: "precommit-setup",
+    entry: "../packages/precommit-setup/src/index.ts",
+    expectedTools: [],
+    expectedCommands: ["add-precommit"],
+  },
 ];
 
 for (const pkg of packages) {
   const tools = [];
+  const commands = [];
   const mod = jiti(pkg.entry);
   const extension = mod.default ?? mod;
 
@@ -61,13 +74,25 @@ for (const pkg of packages) {
     registerTool(definition) {
       tools.push(definition);
     },
+    registerCommand(name, definition) {
+      commands.push({ name, definition });
+    },
   });
 
-  const actual = tools.map((tool) => tool.name);
-  if (JSON.stringify(actual) !== JSON.stringify(pkg.expectedTools)) {
-    console.error(`Unexpected ${pkg.name} tool surface:`, actual);
+  const actualTools = tools.map((tool) => tool.name);
+  if (JSON.stringify(actualTools) !== JSON.stringify(pkg.expectedTools)) {
+    console.error(`Unexpected ${pkg.name} tool surface:`, actualTools);
     process.exit(1);
   }
 
-  console.log(`${pkg.name} registered ${tools.length} tools: ${actual.join(", ")}`);
+  const expectedCommands = pkg.expectedCommands ?? [];
+  const actualCommands = commands.map((command) => command.name);
+  if (JSON.stringify(actualCommands) !== JSON.stringify(expectedCommands)) {
+    console.error(`Unexpected ${pkg.name} command surface:`, actualCommands);
+    process.exit(1);
+  }
+
+  console.log(
+    `${pkg.name} registered ${tools.length} tools: ${actualTools.join(", ") || "none"}; commands: ${actualCommands.join(", ") || "none"}`,
+  );
 }

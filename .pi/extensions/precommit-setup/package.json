@@ -1,0 +1,11 @@
+{
+  "name": "precommit-setup-local-shim",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

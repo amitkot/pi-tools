@@ -25,11 +25,14 @@
   ],
   "scripts": {
     "check": "node scripts/check.mjs",
-    "test": "node tests/safe-github.test.mjs && node tests/open-zed.test.mjs"
+    "test": "node tests/safe-github.test.mjs && node tests/open-zed.test.mjs && node tests/deliver-code-changes.test.mjs && node tests/precommit-setup.test.mjs"
   },
   "pi": {
     "extensions": [
       "packages/*/src/index.ts"
+    ],
+    "skills": [
+      "packages/*/skills"
     ]
   },
   "peerDependencies": {
