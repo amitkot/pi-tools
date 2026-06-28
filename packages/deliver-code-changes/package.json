@@ -1,0 +1,46 @@
+{
+  "name": "@amitkot/pi-deliver-code-changes",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Pi extension and skill for delivering code changes with one approval gate.",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "pi-skill"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitkot/pi-tools.git",
+    "directory": "packages/deliver-code-changes"
+  },
+  "bugs": {
+    "url": "https://github.com/amitkot/pi-tools/issues"
+  },
+  "homepage": "https://github.com/amitkot/pi-tools/tree/main/packages/deliver-code-changes#readme",
+  "files": [
+    "src",
+    "skills",
+    "README.md"
+  ],
+  "main": "src/index.ts",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "check": "node ../../scripts/check.mjs",
+    "test": "node ../../tests/deliver-code-changes.test.mjs"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "license": "MIT"
+}

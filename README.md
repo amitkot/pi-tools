@@ -3,6 +3,8 @@
 [![CI](https://github.com/amitkot/pi-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/amitkot/pi-tools/actions/workflows/ci.yml)
 [![npm: @amitkot/pi-safe-github](https://img.shields.io/npm/v/%40amitkot%2Fpi-safe-github?label=%40amitkot%2Fpi-safe-github)](https://www.npmjs.com/package/@amitkot/pi-safe-github)
 [![npm: @amitkot/pi-open-zed](https://img.shields.io/npm/v/%40amitkot%2Fpi-open-zed?label=%40amitkot%2Fpi-open-zed)](https://www.npmjs.com/package/@amitkot/pi-open-zed)
+[![npm: @amitkot/pi-precommit-setup](https://img.shields.io/npm/v/%40amitkot%2Fpi-precommit-setup?label=%40amitkot%2Fpi-precommit-setup)](https://www.npmjs.com/package/@amitkot/pi-precommit-setup)
+[![npm: @amitkot/pi-permission-tune](https://img.shields.io/npm/v/%40amitkot%2Fpi-permission-tune?label=%40amitkot%2Fpi-permission-tune)](https://www.npmjs.com/package/@amitkot/pi-permission-tune)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node.js >=22](https://img.shields.io/badge/node-%3E%3D22-339933.svg)](package.json)
 [![Security policy](https://img.shields.io/badge/security-policy-lightgrey.svg)](SECURITY.md)
@@ -45,6 +47,36 @@ Tools: `open_zed`.
 
 See [`packages/open-zed/README.md`](packages/open-zed/README.md) for details.
 
+### `deliver-code-changes`
+
+Path: `packages/deliver-code-changes/`
+
+Runs a one-gate delivery workflow for completed code changes.
+
+Command: `/deliver`. Skill: `deliver-code-changes`.
+
+See [`packages/deliver-code-changes/README.md`](packages/deliver-code-changes/README.md) for details.
+
+### `precommit-setup`
+
+Path: `packages/precommit-setup/`
+
+Adds a Rust and/or Python `.pre-commit-config.yaml` to the current Git repository.
+
+Command: `/add-precommit`.
+
+See [`packages/precommit-setup/README.md`](packages/precommit-setup/README.md) for details.
+
+### `permission-tune`
+
+Path: `packages/permission-tune/`
+
+Reference skill for maintaining `@gotgenes/pi-permission-system` config. Covers pattern matching, safe vs dangerous commands, and the prompt-to-rule workflow.
+
+Skill: `permission-tune`.
+
+See [`packages/permission-tune/README.md`](packages/permission-tune/README.md) for details.
+
 ## Installation
 
 ### As a Pi package
@@ -58,6 +90,9 @@ Or install individual packages:
 ```bash
 pi install npm:@amitkot/pi-safe-github
 pi install npm:@amitkot/pi-open-zed
+pi install npm:@amitkot/pi-deliver-code-changes
+pi install npm:@amitkot/pi-precommit-setup
+pi install npm:@amitkot/pi-permission-tune
 ```
 
 After installation, restart Pi or run `/reload`.
@@ -69,6 +104,8 @@ From a checkout, load an extension directly:
 ```bash
 pi -e ./packages/safe-github/src/index.ts
 pi -e ./packages/open-zed/src/index.ts
+pi -e ./packages/deliver-code-changes/src/index.ts
+pi -e ./packages/precommit-setup/src/index.ts
 ```
 
 Inside this repo, Pi auto-loads the project-local shims at `.pi/extensions/<name>/index.ts` after the project is trusted.
@@ -78,6 +115,9 @@ Inside this repo, Pi auto-loads the project-local shims at `.pi/extensions/<name
 - Pi with extension support
 - For `safe-github`: GitHub CLI (`gh`) installed and authenticated (`gh auth status`)
 - For `open-zed`: Zed IDE installed, `zed` on `PATH`
+- For `deliver-code-changes`: Git, GitHub CLI (`gh`) authenticated, and repo checks available
+- For `precommit-setup`: Git, and optionally `prek` or `pre-commit` to install and run hooks
+- For `permission-tune`: `@gotgenes/pi-permission-system` extension installed
 
 ## Development
 
@@ -93,14 +133,19 @@ npm test
 packages/
   safe-github/
   open-zed/
+  deliver-code-changes/
+  precommit-setup/
+  permission-tune/
 .pi/extensions/
-  safe-github/       # local development shim
-  open-zed/           # local development shim
+  safe-github/              # local development shim
+  open-zed/                 # local development shim
+  deliver-code-changes/     # local development shim
+  precommit-setup/          # local development shim
 docs/
   plans/
 ```
 
-New packages go under `packages/<name>/` with their own README, `package.json`, and `src/index.ts`.
+New packages go under `packages/<name>/` with their own README, `package.json`, and `src/index.ts`. Pure skill packages (like `permission-tune`) omit `src/index.ts`.
 
 ## Security model
 
@@ -108,7 +153,8 @@ Pi extensions run with host permissions. Every package in this repo prefers narr
 
 - no arbitrary shell command tools
 - subprocesses use `execFile` with argv arrays, not shell strings
-- mutating operations are gated by `confirm: true` and Pi's permission prompt
+- mutating tool operations are gated by `confirm: true` and Pi's permission prompt
+- `/deliver` runs mutating Git and GitHub operations only after one explicit extension confirmation
 - command output is bounded and sanitized
 - no token-exposing tools
 

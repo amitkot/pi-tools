@@ -1,0 +1,37 @@
+{
+  "name": "@amitkot/pi-permission-tune",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Pi skill for maintaining @gotgenes/pi-permission-system config. Covers pattern matching, safe vs dangerous commands, and the prompt-to-rule workflow.",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-skill",
+    "permission"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitkot/pi-tools.git",
+    "directory": "packages/permission-tune"
+  },
+  "bugs": {
+    "url": "https://github.com/amitkot/pi-tools/issues"
+  },
+  "homepage": "https://github.com/amitkot/pi-tools/tree/main/packages/permission-tune#readme",
+  "files": [
+    "skills",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  },
+  "license": "MIT"
+}

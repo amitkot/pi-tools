@@ -1,0 +1,44 @@
+{
+  "name": "@amitkot/pi-precommit-setup",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Pi command for adding Rust and Python pre-commit profiles to repositories.",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "pre-commit",
+    "rust",
+    "python"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitkot/pi-tools.git",
+    "directory": "packages/precommit-setup"
+  },
+  "bugs": {
+    "url": "https://github.com/amitkot/pi-tools/issues"
+  },
+  "homepage": "https://github.com/amitkot/pi-tools/tree/main/packages/precommit-setup#readme",
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "main": "src/index.ts",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "check": "node ../../scripts/check.mjs",
+    "test": "node ../../tests/precommit-setup.test.mjs"
+  },
+  "pi": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  },
+  "license": "MIT"
+}
